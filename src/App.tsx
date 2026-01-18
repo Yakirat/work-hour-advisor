@@ -463,10 +463,45 @@ const example: MonthRecord[] = [
               </th>
 
               <th>ברוטו (₪)</th>
-              <th>נטו/שעה</th>
-              <th>נטו שולי</th>
-              <th>מצב</th>
-              <th>המלצה לשעות נוספות</th>
+              <th>
+                נטו/שעה
+                <span className="tooltip">
+                  ℹ️
+                  <span className="tooltip-text">
+                    כמה כסף נטו הרווחת בממוצע על כל שעת עבודה בחודש.
+                  </span>
+                </span>
+              </th>
+              <th>
+                נטו שולי
+                <span className="tooltip">
+                  ℹ️
+                  <span className="tooltip-text">
+                    כמה כסף נטו הרווחת על כל שעה נוספת ביחס לחודש הקודם.
+                  </span>
+                </span>
+              </th>
+
+              <th>
+                מצב
+                <span className="tooltip">
+                  ℹ️
+                  <span className="tooltip-text">
+                    השוואה בין הרווח מהשעות הנוספות לבין השכר הממוצע לשעה.
+                  </span>
+                </span>
+              </th>
+
+              <th>
+                המלצה לשעות נוספות
+                <span className="tooltip">
+                  ℹ️
+                  <span className="tooltip-text">
+                    המלצה לחודש הבא: האם כדאי להוסיף, להשאיר או להוריד שעות נוספות.
+                  </span>
+                </span>
+              </th>
+
             </tr>
           </thead>
           <tbody>
