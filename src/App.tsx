@@ -14,25 +14,19 @@ type MonthRecord = {
 };
 
 const MONTH_OPTIONS = [
-  "ינו-26","פבר-26","מרץ-26","אפר-26","מאי-26","יונ-26",
-  "יול-26","אוג-26","ספט-26","אוק-26","נוב-26","דצמ-26",
+  "ינו-26",
+  "פבר-26",
+  "מרץ-26",
+  "אפר-26",
+  "מאי-26",
+  "יונ-26",
+  "יול-26",
+  "אוג-26",
+  "ספט-26",
+  "אוק-26",
+  "נוב-26",
+  "דצמ-26",
 ];
-
-// =====================
-// יעד חכם
-// =====================
-function computeSmartTarget(history: MonthRecord[]) {
-  const healthy = history.filter(
-    (m) => m.status !== "negative" && m.K > 0
-  );
-
-  if (healthy.length < 2) return 0;
-
-  const avg =
-    healthy.reduce((sum, m) => sum + m.K, 0) / healthy.length;
-
-  return Math.round(avg * 0.9 * 100) / 100;
-}
 
 function App() {
   const [month, setMonth] = useState("");
@@ -43,14 +37,13 @@ function App() {
   const [ded, setDed] = useState(0);
 
   const [history, setHistory] = useState<MonthRecord[]>([]);
-  const [targetHourlyNet, setTargetHourlyNet] = useState(0);
 
   const weightedHours = reg + h125 * 1.25 + h150 * 1.5;
   const net = gross - ded;
   const K = weightedHours > 0 ? net / weightedHours : 0;
 
   // =====================
-  // טעינת אקסל
+  // טעינת קובץ אקסל
   // =====================
   function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -63,14 +56,17 @@ function App() {
       if (!data) return;
 
       const workbook = XLSX.read(data, { type: "binary" });
-      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
 
       const rows: any[][] = XLSX.utils.sheet_to_json(sheet, {
         header: 1,
-        raw: false,
+        raw: false, // חשוב!
       });
 
-      const dataRows = rows.slice(1);
+
+      const dataRows = rows.slice(1); // דילוג על כותרות
+
       const imported: MonthRecord[] = [];
 
       dataRows.forEach((row) => {
@@ -88,54 +84,54 @@ function App() {
         const K = hours > 0 ? net / hours : 0;
 
         let status: Status = "neutral";
-        let S: number | undefined;
+        let S: number | undefined = undefined;
 
         if (imported.length > 0) {
           const prev = imported[imported.length - 1];
           S = (net - prev.net) / (hours - prev.hours);
 
-          if (isFinite(S)) {
-            if (S < prev.K - 5) status = "negative";
-            else if (S > prev.K + 5) status = "positive";
-          }
+          if (S < prev.K - 5) status = "negative";
+          else if (S > prev.K + 5) status = "positive";
         }
 
         imported.push({ month, hours, net, K, S, status });
       });
 
       setHistory(imported);
-      setTargetHourlyNet(computeSmartTarget(imported));
     };
 
     reader.readAsBinaryString(file);
   }
 
   // =====================
-  // הוספה ידנית
+  // הוספה ידנית של חודש
   // =====================
   function addMonth() {
     if (!month || weightedHours <= 0) return;
 
     let status: Status = "neutral";
-    let S: number | undefined;
+    let S: number | undefined = undefined;
 
     if (history.length > 0) {
       const prev = history[history.length - 1];
       S = (net - prev.net) / (weightedHours - prev.hours);
 
-      if (isFinite(S)) {
-        if (targetHourlyNet > 0 && S < targetHourlyNet) {
-          status = "negative";
-        } else if (S > prev.K + 5) {
-          status = "positive";
-        } else if (S < prev.K - 5) {
-          status = "negative";
-        }
-      }
+      if (S < prev.K - 5) status = "negative";
+      else if (S > prev.K + 5) status = "positive";
     }
 
-    setHistory([...history, { month, hours: weightedHours, net, K, S, status }]);
+    const record: MonthRecord = {
+      month,
+      hours: weightedHours,
+      net,
+      K,
+      S,
+      status,
+    };
 
+    setHistory([...history, record]);
+
+    // איפוס שדות
     setMonth("");
     setReg(0);
     setH125(0);
@@ -149,48 +145,96 @@ function App() {
   // =====================
   return (
     <div className="container">
-      <h1>כמה באמת שווה לך כל שעה?</h1>
+      <h1>💰 מחשבון לניתוח אפקטיביות ומיסוי שעות עבודה</h1>
 
-      {/* הסבר על השירות – לפני הכל */}
-      <p className="intro">
-        הכלי הזה עוזר להבין האם משתלם לך לעבוד יותר שעות,
-        או שהשעות הנוספות כבר לא משתלמות בגלל מיסוי וניכויים.
-        <br />
-        טוענים נתוני שכר (או מזינים ידנית), והמערכת מחשבת
-        כמה באמת הרווחת על כל שעה נוספת – וממליצה אם כדאי
-        <strong> להוסיף שעות</strong>, <strong>להישאר כמו שאתה</strong>,
-        או <strong>להוריד שעות</strong>.
-      </p>
+    <p className="intro">
+      הכלי הזה עוזר להבין האם משתלם לך לעבוד יותר שעות,
+      או שדווקא השעות הנוספות כבר לא משתלמות בגלל מיסוי וניכויים.
+      <br />
+      טוענים נתוני שכר (או מזינים ידנית), והמערכת מחשבת כמה באמת
+      הרווחת על כל שעה נוספת – וממליצה אם כדאי
+      <strong> להוסיף שעות</strong>, <strong>להישאר כמו שאתה</strong>,
+      או <strong>להוריד שעות</strong>.
+    </p>
 
-      {/* יעד */}
-      <div className="card">
-        <label>
-          🎯 יעד נטו מינימלי לשעה (מחושב אוטומטית)
-          <input
-            type="number"
-            value={targetHourlyNet}
-            onChange={(e) => setTargetHourlyNet(+e.target.value)}
-          />
-        </label>
-        <p className="note">
-          אם שעה נוספת שווה פחות מהיעד – זו נחשבת פגיעה.
-        </p>
-      </div>
-
-      {/* מקרא אקסל */}
       <div className="legend">
         <h3>📊 מבנה קובץ האקסל</h3>
+
         <p>
-          הקובץ חייב להכיל שורת כותרות ועמודות A–F בלבד.
-          עמודות נוספות לא משפיעות.
+          כדי לטעון נתונים למערכת, יש להכין קובץ אקסל עם
+          <strong> שורה ראשונה ככותרות </strong>
+          והעמודות הבאות (בסדר הזה):
+        </p>
+
+        <table className="legend-table">
+          <thead>
+            <tr>
+              <th>עמודה</th>
+              <th>שם</th>
+              <th>חובה</th>
+              <th>הערה</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>A</td>
+              <td>חודש</td>
+              <td>כן</td>
+              <td>לדוגמה: אוג-25</td>
+            </tr>
+            <tr>
+              <td>B</td>
+              <td>שעות רגילות</td>
+              <td>כן</td>
+              <td>מספר</td>
+            </tr>
+            <tr>
+              <td>C</td>
+              <td>שעות נוספות 125%</td>
+              <td>כן</td>
+              <td>מספר</td>
+            </tr>
+            <tr>
+              <td>D</td>
+              <td>שעות נוספות 150%</td>
+              <td>כן</td>
+              <td>מספר</td>
+            </tr>
+            <tr>
+              <td>E</td>
+              <td>שכר ברוטו</td>
+              <td>כן</td>
+              <td>בש״ח</td>
+            </tr>
+            <tr>
+              <td>F</td>
+              <td>ניכויים</td>
+              <td>כן</td>
+              <td>סה״כ ניכויים</td>
+            </tr>
+            <tr>
+              <td>G–T</td>
+              <td>כל דבר אחר</td>
+              <td>לא</td>
+              <td>המערכת מתעלמת</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p className="note">
+          אין צורך בעמודות נוספות. נתונים שאינם בעמודות A–F לא משפיעים על החישוב.
         </p>
       </div>
 
-      {/* טעינה */}
+      {/* טעינת אקסל */}
       <div className="card">
         <label>
           📂 טעינת קובץ אקסל
-          <input type="file" accept=".xlsx,.xls" onChange={handleFile} />
+          <input
+            type="file"
+            accept=".xlsx,.xls"
+            onChange={handleFile}
+          />
         </label>
       </div>
 
@@ -201,29 +245,57 @@ function App() {
           <select value={month} onChange={(e) => setMonth(e.target.value)}>
             <option value="">בחר חודש</option>
             {MONTH_OPTIONS.map((m) => (
-              <option key={m} value={m}>{m}</option>
+              <option key={m} value={m}>
+                {m}
+              </option>
             ))}
           </select>
         </label>
 
-        <label>שעות רגילות
-          <input type="number" value={reg} onChange={(e) => setReg(+e.target.value)} />
+
+        <label>
+          שעות רגילות
+          <input
+            type="number"
+            value={reg}
+            onChange={(e) => setReg(+e.target.value)}
+          />
         </label>
 
-        <label>שעות 125%
-          <input type="number" value={h125} onChange={(e) => setH125(+e.target.value)} />
+        <label>
+          שעות 125%
+          <input
+            type="number"
+            value={h125}
+            onChange={(e) => setH125(+e.target.value)}
+          />
         </label>
 
-        <label>שעות 150%
-          <input type="number" value={h150} onChange={(e) => setH150(+e.target.value)} />
+        <label>
+          שעות 150%
+          <input
+            type="number"
+            value={h150}
+            onChange={(e) => setH150(+e.target.value)}
+          />
         </label>
 
-        <label>שכר ברוטו (₪)
-          <input type="number" value={gross} onChange={(e) => setGross(+e.target.value)} />
+        <label>
+          שכר ברוטו (₪)
+          <input
+            type="number"
+            value={gross}
+            onChange={(e) => setGross(+e.target.value)}
+          />
         </label>
 
-        <label>ניכויים (₪)
-          <input type="number" value={ded} onChange={(e) => setDed(+e.target.value)} />
+        <label>
+          ניכויים סה״כ (₪)
+          <input
+            type="number"
+            value={ded}
+            onChange={(e) => setDed(+e.target.value)}
+          />
         </label>
 
         <button onClick={addMonth}>➕ הוסף חודש</button>
@@ -260,20 +332,33 @@ function App() {
           </tbody>
         </table>
       )}
+    <div className="explanation">
+      <h3>איך מחושבת ההמלצה?</h3>
 
-      {/* הסבר תחתון – איך מחושבת ההמלצה */}
-      <div className="explanation">
-        <h3>איך מחושבת ההמלצה?</h3>
-        <ul>
-          <li><strong>➕ להוסיף</strong> – השעה הנוספת משתלמת יותר מהממוצע</li>
-          <li><strong>➗ להשאיר</strong> – אין שינוי מהותי בכדאיות</li>
-          <li><strong>➖ להוריד</strong> – השעה הנוספת שווה פחות (בד״כ בגלל מיסוי)</li>
-        </ul>
-        <p className="note">
-          ההשוואה מתבצעת מול החודש הקודם. חודשים עם תיקונים רטרואקטיביים
-          עשויים להיראות חריגים.
-        </p>
-      </div>
+      <p>
+        ההמלצה מבוססת על השוואה בין <strong>הרווח נטו לשעה</strong> לבין
+        <strong> הרווח מהשעות הנוספות</strong> שנוספו החודש.
+      </p>
+
+      <ul>
+        <li>
+          <strong>➕ להוסיף שעות</strong> – אם כל שעה נוספת הכניסה לך יותר
+          מהשכר הממוצע לשעה.
+        </li>
+        <li>
+          <strong>➗ להשאיר</strong> – אם אין שינוי מהותי ברווח לשעה.
+        </li>
+        <li>
+          <strong>➖ להוריד שעות</strong> – אם השעות הנוספות שוות פחות
+          משמעותית, לרוב בגלל מיסוי גבוה יותר.
+        </li>
+      </ul>
+
+      <p className="note">
+        ההשוואה מתבצעת מול החודש הקודם בלבד, ולכן חודשים עם תיקונים רטרואקטיביים
+        עשויים להיראות חריגים.
+      </p>
+    </div>
     </div>
   );
 }
