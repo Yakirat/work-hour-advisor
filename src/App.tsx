@@ -205,6 +205,10 @@ const example: MonthRecord[] = [
   // =====================
   return (
     <div className="container">
+      <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 4 }}>
+        בס״ד
+      </div>
+
       <h1>💰  מחשבון לניתוח אפקטיביות ומיסוי שעות עבודה נוספות  💰</h1>
 
     <p className="intro">
