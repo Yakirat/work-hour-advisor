@@ -28,6 +28,22 @@ const MONTH_OPTIONS = [
   "דצמ-26",
 ];
 
+// =====================
+// חישוב יעד חכם
+// =====================
+function computeSmartTarget(history: MonthRecord[]) {
+  const healthy = history.filter(
+    (m) => m.status !== "negative" && m.K > 0
+  );
+
+  if (healthy.length < 2) return 0;
+
+  const avg =
+    healthy.reduce((sum, m) => sum + m.K, 0) / healthy.length;
+
+  return Math.round(avg * 0.9 * 100) / 100; // 90% + עיגול
+}
+
 function App() {
   const [month, setMonth] = useState("");
   const [reg, setReg] = useState(0);
@@ -37,6 +53,7 @@ function App() {
   const [ded, setDed] = useState(0);
 
   const [history, setHistory] = useState<MonthRecord[]>([]);
+  const [targetHourlyNet, setTargetHourlyNet] = useState(0);
 
   const weightedHours = reg + h125 * 1.25 + h150 * 1.5;
   const net = gross - ded;
@@ -56,17 +73,14 @@ function App() {
       if (!data) return;
 
       const workbook = XLSX.read(data, { type: "binary" });
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
 
       const rows: any[][] = XLSX.utils.sheet_to_json(sheet, {
         header: 1,
-        raw: false, // חשוב!
+        raw: false,
       });
 
-
-      const dataRows = rows.slice(1); // דילוג על כותרות
-
+      const dataRows = rows.slice(1);
       const imported: MonthRecord[] = [];
 
       dataRows.forEach((row) => {
@@ -90,14 +104,19 @@ function App() {
           const prev = imported[imported.length - 1];
           S = (net - prev.net) / (hours - prev.hours);
 
-          if (S < prev.K - 5) status = "negative";
-          else if (S > prev.K + 5) status = "positive";
+          if (!isFinite(S)) S = undefined;
+
+          if (S !== undefined) {
+            if (S < prev.K - 5) status = "negative";
+            else if (S > prev.K + 5) status = "positive";
+          }
         }
 
         imported.push({ month, hours, net, K, S, status });
       });
 
       setHistory(imported);
+      setTargetHourlyNet(computeSmartTarget(imported));
     };
 
     reader.readAsBinaryString(file);
@@ -116,22 +135,24 @@ function App() {
       const prev = history[history.length - 1];
       S = (net - prev.net) / (weightedHours - prev.hours);
 
-      if (S < prev.K - 5) status = "negative";
-      else if (S > prev.K + 5) status = "positive";
+      if (!isFinite(S)) S = undefined;
+
+      if (S !== undefined) {
+        if (targetHourlyNet > 0 && S < targetHourlyNet) {
+          status = "negative";
+        } else if (S > prev.K + 5) {
+          status = "positive";
+        } else if (S < prev.K - 5) {
+          status = "negative";
+        }
+      }
     }
 
-    const record: MonthRecord = {
-      month,
-      hours: weightedHours,
-      net,
-      K,
-      S,
-      status,
-    };
+    setHistory([
+      ...history,
+      { month, hours: weightedHours, net, K, S, status },
+    ]);
 
-    setHistory([...history, record]);
-
-    // איפוס שדות
     setMonth("");
     setReg(0);
     setH125(0);
@@ -145,100 +166,34 @@ function App() {
   // =====================
   return (
     <div className="container">
-      <h1>💰 מחשבון לניתוח אפקטיביות ומיסוי שעות עבודה</h1>
+      <h1>כמה באמת שווה לך כל שעה?</h1>
 
-    <p className="intro">
-      הכלי הזה עוזר להבין האם משתלם לך לעבוד יותר שעות,
-      או שדווקא השעות הנוספות כבר לא משתלמות בגלל מיסוי וניכויים.
-      <br />
-      טוענים נתוני שכר (או מזינים ידנית), והמערכת מחשבת כמה באמת
-      הרווחת על כל שעה נוספת – וממליצה אם כדאי
-      <strong> להוסיף שעות</strong>, <strong>להישאר כמו שאתה</strong>,
-      או <strong>להוריד שעות</strong>.
-    </p>
+      <p className="intro">
+        הכלי הזה עוזר להבין האם משתלם לך לעבוד יותר שעות,
+        או שהשעות הנוספות כבר לא משתלמות בגלל מיסוי וניכויים.
+      </p>
 
-      <div className="legend">
-        <h3>📊 מבנה קובץ האקסל</h3>
-
-        <p>
-          כדי לטעון נתונים למערכת, יש להכין קובץ אקסל עם
-          <strong> שורה ראשונה ככותרות </strong>
-          והעמודות הבאות (בסדר הזה):
-        </p>
-
-        <table className="legend-table">
-          <thead>
-            <tr>
-              <th>עמודה</th>
-              <th>שם</th>
-              <th>חובה</th>
-              <th>הערה</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>A</td>
-              <td>חודש</td>
-              <td>כן</td>
-              <td>לדוגמה: אוג-25</td>
-            </tr>
-            <tr>
-              <td>B</td>
-              <td>שעות רגילות</td>
-              <td>כן</td>
-              <td>מספר</td>
-            </tr>
-            <tr>
-              <td>C</td>
-              <td>שעות נוספות 125%</td>
-              <td>כן</td>
-              <td>מספר</td>
-            </tr>
-            <tr>
-              <td>D</td>
-              <td>שעות נוספות 150%</td>
-              <td>כן</td>
-              <td>מספר</td>
-            </tr>
-            <tr>
-              <td>E</td>
-              <td>שכר ברוטו</td>
-              <td>כן</td>
-              <td>בש״ח</td>
-            </tr>
-            <tr>
-              <td>F</td>
-              <td>ניכויים</td>
-              <td>כן</td>
-              <td>סה״כ ניכויים</td>
-            </tr>
-            <tr>
-              <td>G–T</td>
-              <td>כל דבר אחר</td>
-              <td>לא</td>
-              <td>המערכת מתעלמת</td>
-            </tr>
-          </tbody>
-        </table>
-
+      <div className="card">
+        <label>
+          🎯 יעד נטו מינימלי לשעה (מחושב אוטומטית)
+          <input
+            type="number"
+            value={targetHourlyNet}
+            onChange={(e) => setTargetHourlyNet(+e.target.value)}
+          />
+        </label>
         <p className="note">
-          אין צורך בעמודות נוספות. נתונים שאינם בעמודות A–F לא משפיעים על החישוב.
+          אם שעה נוספת שווה פחות מהיעד – זו נחשבת פגיעה.
         </p>
       </div>
 
-      {/* טעינת אקסל */}
       <div className="card">
         <label>
           📂 טעינת קובץ אקסל
-          <input
-            type="file"
-            accept=".xlsx,.xls"
-            onChange={handleFile}
-          />
+          <input type="file" accept=".xlsx,.xls" onChange={handleFile} />
         </label>
       </div>
 
-      {/* הזנה ידנית */}
       <div className="card">
         <label>
           חודש
@@ -252,56 +207,34 @@ function App() {
           </select>
         </label>
 
-
         <label>
           שעות רגילות
-          <input
-            type="number"
-            value={reg}
-            onChange={(e) => setReg(+e.target.value)}
-          />
+          <input type="number" value={reg} onChange={(e) => setReg(+e.target.value)} />
         </label>
 
         <label>
           שעות 125%
-          <input
-            type="number"
-            value={h125}
-            onChange={(e) => setH125(+e.target.value)}
-          />
+          <input type="number" value={h125} onChange={(e) => setH125(+e.target.value)} />
         </label>
 
         <label>
           שעות 150%
-          <input
-            type="number"
-            value={h150}
-            onChange={(e) => setH150(+e.target.value)}
-          />
+          <input type="number" value={h150} onChange={(e) => setH150(+e.target.value)} />
         </label>
 
         <label>
           שכר ברוטו (₪)
-          <input
-            type="number"
-            value={gross}
-            onChange={(e) => setGross(+e.target.value)}
-          />
+          <input type="number" value={gross} onChange={(e) => setGross(+e.target.value)} />
         </label>
 
         <label>
-          ניכויים סה״כ (₪)
-          <input
-            type="number"
-            value={ded}
-            onChange={(e) => setDed(+e.target.value)}
-          />
+          ניכויים (₪)
+          <input type="number" value={ded} onChange={(e) => setDed(+e.target.value)} />
         </label>
 
         <button onClick={addMonth}>➕ הוסף חודש</button>
       </div>
 
-      {/* טבלה */}
       {history.length > 0 && (
         <table>
           <thead>
@@ -332,33 +265,6 @@ function App() {
           </tbody>
         </table>
       )}
-    <div className="explanation">
-      <h3>איך מחושבת ההמלצה?</h3>
-
-      <p>
-        ההמלצה מבוססת על השוואה בין <strong>הרווח נטו לשעה</strong> לבין
-        <strong> הרווח מהשעות הנוספות</strong> שנוספו החודש.
-      </p>
-
-      <ul>
-        <li>
-          <strong>➕ להוסיף שעות</strong> – אם כל שעה נוספת הכניסה לך יותר
-          מהשכר הממוצע לשעה.
-        </li>
-        <li>
-          <strong>➗ להשאיר</strong> – אם אין שינוי מהותי ברווח לשעה.
-        </li>
-        <li>
-          <strong>➖ להוריד שעות</strong> – אם השעות הנוספות שוות פחות
-          משמעותית, לרוב בגלל מיסוי גבוה יותר.
-        </li>
-      </ul>
-
-      <p className="note">
-        ההשוואה מתבצעת מול החודש הקודם בלבד, ולכן חודשים עם תיקונים רטרואקטיביים
-        עשויים להיראות חריגים.
-      </p>
-    </div>
     </div>
   );
 }
