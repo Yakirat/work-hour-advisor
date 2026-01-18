@@ -67,6 +67,15 @@ function App() {
     if (smart > 0) setTargetHours(smart);
   }, [history, isTargetManual]);
 
+    // ⭐ NEW: חישוב הקשר ליעד עבור החודש האחרון
+  const lastMonth =
+    history.length > 0 ? history[history.length - 1] : null;
+
+  const diffFromTarget =
+    lastMonth && targetHours > 0
+      ? Math.round(lastMonth.hours - targetHours)
+      : null;
+
   // =====================
   // טעינת קובץ אקסל
   // =====================
@@ -262,6 +271,11 @@ function App() {
       <div className="card">
         <h3>🎯 יעד שעות חודשי</h3>
 
+        <p className="note">
+          זה מספר השעות שבו, לפי ההיסטוריה שלך, אתה מרוויח בצורה
+          האופטימלית – בלי שהשעות הנוספות נשחקות ממס וניכויים.
+        </p>
+
         <label>
           יעד (שעות)
           <input
@@ -283,7 +297,45 @@ function App() {
         >
           ♻️ חזור ליעד חכם
         </button>
+
+        {/* ⭐ NEW: הסבר הקשר ליעד */}
+        {lastMonth && targetHours > 0 && diffFromTarget !== null && (
+          <div className="note" style={{ marginTop: 12 }}>
+            <p>
+              📅 <strong>החודש האחרון:</strong>{" "}
+              {lastMonth.hours.toFixed(1)} שעות
+            </p>
+
+            {diffFromTarget > 0 && (
+              <p>
+                ⚠️ <strong>חריגה:</strong> {diffFromTarget} שעות מעל היעד
+              </p>
+            )}
+
+            {diffFromTarget < 0 && (
+              <p>
+                📉 <strong>מתחת ליעד:</strong>{" "}
+                {Math.abs(diffFromTarget)} שעות
+              </p>
+            )}
+
+            {diffFromTarget === 0 && (
+              <p>🟢 אתה בדיוק על היעד</p>
+            )}
+
+            <p>
+              🧠 <strong>מסקנה:</strong>{" "}
+              {diffFromTarget > 5 &&
+                "עבדת מעבר לאזור האופטימלי שלך. סביר שהשעות הנוספות פחות משתלמות."}
+              {diffFromTarget < -5 &&
+                "יש לך מרווח להוסיף שעות בלי פגיעה משמעותית ברווח לשעה."}
+              {Math.abs(diffFromTarget) <= 5 &&
+                "אתה עובד באזור האופטימלי שלך. אין סיבה לשנות כרגע."}
+            </p>
+          </div>
+        )}
       </div>
+
 
       {/* הזנה ידנית */}
       <div className="card">
