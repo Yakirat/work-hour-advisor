@@ -399,18 +399,6 @@ const example: MonthRecord[] = [
           }}
           onClick={() => setIsManualOpen((v) => !v)}
         >
-          <h3 style={{ margin: 0 }}>
-            ✍️ הוספת חודש ידנית
-            <span className="tooltip" style={{ marginRight: 6 }}>
-              ℹ️
-              <span className="tooltip-text">
-                כאן ניתן להזין חודש באופן ידני, למשל אם אין לך קובץ אקסל או אם
-                ברצונך לבדוק תרחיש עתידי. הנתונים שתזין ישפיעו על החישובים,
-                ההמלצות והיעד החודשי.
-              </span>
-            </span>
-          </h3>
-
           <span
             style={{
               fontSize: 26,
@@ -423,6 +411,18 @@ const example: MonthRecord[] = [
           >
             ▶
           </span>
+          
+          <h3 style={{ margin: 0 }}>
+            ✍️ הוספת חודש ידנית
+            <span className="tooltip" style={{ marginRight: 6 }}>
+              ℹ️
+              <span className="tooltip-text">
+                כאן ניתן להזין חודש באופן ידני, למשל אם אין לך קובץ אקסל או אם
+                ברצונך לבדוק תרחיש עתידי. הנתונים שתזין ישפיעו על החישובים,
+                ההמלצות והיעד החודשי.
+              </span>
+            </span>
+          </h3>
 
         </div>
 
