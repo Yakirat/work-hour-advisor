@@ -81,26 +81,25 @@ function App() {
 // ⭐ NEW: טעינת נתוני דוגמה
 function loadExampleData() {
 const example: MonthRecord[] = [
-  { month: "אוג-24", hours: 160.0, gross: 15500, net: 13000.0, K: 81.25, status: "neutral" },
-  { month: "ספט-24", hours: 170.0, gross: 18000, net: 15000.0, K: 88.24, S: 200.0, status: "positive" },
-  { month: "אוק-24", hours: 190.0, gross: 19500, net: 15800.0, K: 83.16, S: 40.0, status: "negative" },
-  { month: "נוב-24", hours: 195.0, gross: 21500, net: 17000.0, K: 87.18, S: 240.0, status: "positive" },
-  { month: "דצמ-24", hours: 215.0, gross: 24000, net: 17500.0, K: 81.40, S: 25.0, status: "negative" },
-  { month: "ינו-25", hours: 218.0, gross: 22500, net: 18200.0, K: 83.49, S: 233.33, status: "positive" },
-  { month: "פבר-25", hours: 228.0, gross: 23500, net: 19000.0, K: 83.33, S: 80.0, status: "neutral" },
-  { month: "מרץ-25", hours: 248.0, gross: 25500, net: 19800.0, K: 79.84, S: 40.0, status: "negative" },
-  { month: "אפר-25", hours: 255.0, gross: 27500, net: 21500.0, K: 84.31, S: 242.86, status: "positive" },
-  { month: "מאי-25", hours: 270.0, gross: 28500, net: 22000.0, K: 81.48, S: 33.33, status: "negative" },
-  { month: "יונ-25", hours: 275.0, gross: 30000, net: 23000.0, K: 83.64, S: 200.0, status: "positive" },
-  { month: "יול-25", hours: 285.0, gross: 30500, net: 23200.0, K: 81.40, S: 20.0, status: "negative" },
-  { month: "אוג-25", hours: 295.0, gross: 32500, net: 24500.0, K: 83.05, S: 130.0, status: "positive" },
-  { month: "ספט-25", hours: 305.0, gross: 33500, net: 25000.0, K: 81.97, S: 50.0, status: "negative" },
-  { month: "אוק-25", hours: 315.0, gross: 35000, net: 26000.0, K: 82.54, S: 100.0, status: "positive" },
-  { month: "נוב-25", hours: 325.0, gross: 36000, net: 26500.0, K: 81.54, S: 50.0, status: "negative" },
-  { month: "דצמ-25", hours: 340.0, gross: 38000, net: 27000.0, K: 79.41, S: 33.33, status: "negative" },
-  { month: "ינו-26", hours: 350.0, gross: 39500, net: 27800.0, K: 79.43, S: 80.0, status: "neutral" },
+  { month: "אוג-24", hours: 160, gross: 16000, net: 12800, K: 80, status: "neutral" },
+  { month: "ספט-24", hours: 175, gross: 17800, net: 14500, K: 82.9, S: 113, status: "positive" },
+  { month: "אוק-24", hours: 190, gross: 19500, net: 15700, K: 82.6, S: 80, status: "positive" },
+  { month: "נוב-24", hours: 205, gross: 21000, net: 16400, K: 80.0, S: 46.7, status: "neutral" },
+  { month: "דצמ-24", hours: 220, gross: 22500, net: 16800, K: 76.4, S: 26.7, status: "negative" },
+  { month: "ינו-25", hours: 205, gross: 21200, net: 16200, K: 79.0, S: 120, status: "positive" },
+  { month: "פבר-25", hours: 200, gross: 20800, net: 15800, K: 79.0, S: 80, status: "neutral" },
+  { month: "מרץ-25", hours: 215, gross: 22200, net: 16600, K: 77.2, S: 56, status: "neutral" },
+  { month: "אפר-25", hours: 230, gross: 23800, net: 17000, K: 73.9, S: 26.7, status: "negative" },
+  { month: "מאי-25", hours: 215, gross: 22400, net: 16800, K: 78.1, S: 160, status: "positive" },
+  { month: "יונ-25", hours: 210, gross: 22000, net: 16600, K: 79.0, S: 80, status: "neutral" },
+  { month: "יול-25", hours: 225, gross: 23600, net: 17000, K: 75.6, S: 26.7, status: "negative" },
+  { month: "אוג-25", hours: 210, gross: 22200, net: 16800, K: 80.0, S: 160, status: "positive" },
+  { month: "ספט-25", hours: 205, gross: 21800, net: 16500, K: 80.5, S: 60, status: "neutral" },
+  { month: "אוק-25", hours: 220, gross: 23400, net: 17200, K: 78.2, S: 46.7, status: "neutral" },
+  { month: "נוב-25", hours: 235, gross: 25000, net: 17500, K: 74.5, S: 20, status: "negative" },
+  { month: "דצמ-25", hours: 220, gross: 23600, net: 17000, K: 77.3, S: 120, status: "positive" },
+  { month: "ינו-26", hours: 215, gross: 23200, net: 16800, K: 78.1, S: 60, status: "neutral" },
 ];
-
 
   setHistory(example);
   setIsTargetManual(false);
