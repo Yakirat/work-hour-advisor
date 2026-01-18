@@ -407,9 +407,19 @@ const example: MonthRecord[] = [
             </span>
           </h3>
 
-          <span style={{ fontSize: 18 }}>
-            {isManualOpen ? "▾" : "▸"}
+          <span
+            style={{
+              fontSize: 26,
+              fontWeight: "bold",
+              lineHeight: 1,
+              marginLeft: 8,
+              transition: "transform 0.2s ease",
+              transform: isManualOpen ? "rotate(90deg)" : "rotate(0deg)",
+            }}
+          >
+            ▶
           </span>
+
         </div>
 
         {isManualOpen && (
