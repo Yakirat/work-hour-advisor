@@ -259,14 +259,14 @@ function App() {
       </div>
       {/* טעינת אקסל */}
       <div className="card">
-        <label>
+        <h3>
           📂 טעינת קובץ אקסל
           <input
             type="file"
             accept=".xlsx,.xls"
             onChange={handleFile}
           />
-        </label>
+        </h3>
       </div>
 
       {/* ⭐ NEW: יעד חודשי */}
