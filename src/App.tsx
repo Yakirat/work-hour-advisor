@@ -394,24 +394,23 @@ const example: MonthRecord[] = [
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
+            justifyContent: "flex-start",
             cursor: "pointer",
+            gap: 6,
           }}
           onClick={() => setIsManualOpen((v) => !v)}
         >
           <span
             style={{
-              fontSize: 26,
-              fontWeight: "bold",
+              fontSize: 18,
               lineHeight: 1,
-              marginLeft: 8,
-              transition: "transform 0.2s ease",
-              transform: isManualOpen ? "rotate(90deg)" : "rotate(0deg)",
+              marginLeft: 6,
+              color: "#374151",
             }}
           >
-            ▶
+            {isManualOpen ? "▼" : "◀"}
           </span>
-          
+
           <h3 style={{ margin: 0 }}>
             ✍️ הוספת חודש ידנית
             <span className="tooltip" style={{ marginRight: 6 }}>
