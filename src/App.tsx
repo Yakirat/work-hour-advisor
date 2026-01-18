@@ -452,7 +452,16 @@ const example: MonthRecord[] = [
           <thead>
             <tr>
               <th>חודש</th>
-              <th>שעות</th>
+              <th>
+                שעות (סה״כ)
+                <span className="tooltip">
+                  ℹ️
+                  <span className="tooltip-text">
+                    סך כל שעות העבודה בחודש, כולל שעות רגילות ושעות נוספות (125% ו-150%).
+                  </span>
+                </span>
+              </th>
+
               <th>ברוטו (₪)</th>
               <th>נטו/שעה</th>
               <th>נטו שולי</th>
