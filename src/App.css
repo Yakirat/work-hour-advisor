@@ -1,0 +1,215 @@
+/* ===== בסיס ===== */
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Arial, sans-serif;
+  background: #f2f3f5;
+  color: #1f2933;
+  margin: 0;
+
+  display: flex;
+  justify-content: center;   /* מרכז אופקית */
+}
+
+/* ===== מעטפת מרכזית ===== */
+
+.container {
+  width: 100%;
+  max-width: 1000px;
+  padding: 32px 24px;
+  direction: rtl;
+}
+
+
+/* ===== כותרת ===== */
+
+h1 {
+  text-align: center;
+  margin-bottom: 32px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* ===== כרטיסים ===== */
+
+.card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 0 auto 20px auto;   /* מרכז ויזואלי */
+  border: 1px solid #e5e7eb;
+  max-width: 900px;           /* מונע “התפשטות שמאלה” */
+}
+
+/* ===== טפסים ===== */
+
+label {
+  display: block;
+  margin-top: 14px;
+  font-size: 14px;
+  text-align: right;
+}
+
+input {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 6px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  box-sizing: border-box;
+
+  background: #ffffff; /* רקע לבן */
+  color: #000000;      /* טקסט שחור */
+}
+
+select {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 6px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  background: #ffffff;
+  color: #000000;
+  box-sizing: border-box;
+}
+
+input:focus {
+  outline: none;
+  border-color: #64748b;
+  background: #ffffff;
+}
+
+button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  cursor: pointer;
+  color: #000000; /* ← זה מה שחיפשת */
+}
+
+button:hover {
+  background: #eef2f7;
+}
+
+/* ===== טבלה ===== */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  margin-top: 32px;
+  border: 1px solid #e5e7eb;
+}
+
+
+th,
+td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: center;
+  font-size: 14px;
+}
+
+th {
+  background: #f8fafc;
+  font-weight: 600;
+}
+
+/* ===== סטטוסים – עדינים ===== */
+
+tr.positive {
+  background: #f1f5f9;
+}
+
+tr.neutral {
+  background: #ffffff;
+}
+
+tr.negative {
+  background: #f9fafb;
+}
+
+/* המלצה */
+td:last-child {
+  font-weight: 500;
+}
+
+.explanation {
+  max-width: 1000px;
+  margin: 32px auto 0 auto;
+  padding: 16px 20px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.explanation h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.explanation ul {
+  margin: 8px 0 8px 0;
+  padding-right: 20px;
+}
+
+.explanation li {
+  margin-bottom: 6px;
+}
+
+.explanation .note {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #475569;
+}
+
+.legend {
+  max-width: 1000px;
+  margin: 0 auto 24px auto;
+  padding: 16px 20px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.legend h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.legend-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0;
+}
+
+.legend-table th,
+.legend-table td {
+  padding: 8px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: center;
+  font-size: 13px;
+}
+
+.legend-table th {
+  background: #f8fafc;
+  font-weight: 600;
+}
+
+.legend .note {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #475569;
+}
