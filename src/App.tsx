@@ -49,7 +49,7 @@ function App() {
   const [h150, setH150] = useState(0);
   const [gross, setGross] = useState(0);
   const [ded, setDed] = useState(0);
-
+  const [isManualOpen, setIsManualOpen] = useState(false);
   const [history, setHistory] = useState<MonthRecord[]>([]);
 
   // ⭐ NEW: יעד חודשי + דגל שינוי ידני
@@ -386,81 +386,100 @@ const example: MonthRecord[] = [
 
       {/* הזנה ידנית */}
       <div className="card">
-        <h3 style={{ marginBottom: 8 }}>
-          ✍️ הוספת חודש ידנית
-          <span className="tooltip" style={{ marginRight: 6 }}>
-            ℹ️
-            <span className="tooltip-text">
-              כאן ניתן להזין חודש באופן ידני, למשל אם אין לך קובץ אקסל או אם
-              ברצונך לבדוק תרחיש עתידי. הנתונים שתזין ישפיעו על החישובים,
-              ההמלצות והיעד החודשי.
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            cursor: "pointer",
+          }}
+          onClick={() => setIsManualOpen((v) => !v)}
+        >
+          <h3 style={{ margin: 0 }}>
+            ✍️ הוספת חודש ידנית
+            <span className="tooltip" style={{ marginRight: 6 }}>
+              ℹ️
+              <span className="tooltip-text">
+                כאן ניתן להזין חודש באופן ידני, למשל אם אין לך קובץ אקסל או אם
+                ברצונך לבדוק תרחיש עתידי. הנתונים שתזין ישפיעו על החישובים,
+                ההמלצות והיעד החודשי.
+              </span>
             </span>
+          </h3>
+
+          <span style={{ fontSize: 18 }}>
+            {isManualOpen ? "▾" : "▸"}
           </span>
-        </h3>
+        </div>
 
-        <p className="note" style={{ marginTop: 0 }}>
-          מתאים גם להזנת חודשים עתידיים לצורך בדיקת “מה יקרה אם”.
-        </p>
+        {isManualOpen && (
+          <>
+            <p className="note" style={{ marginTop: 8 }}>
+              מתאים גם להזנת חודשים עתידיים לצורך בדיקת “מה יקרה אם”.
+            </p>
 
-        <label>
-          חודש
-          <select value={month} onChange={(e) => setMonth(e.target.value)}>
-            <option value="">בחר חודש</option>
-            {MONTH_OPTIONS.map((m) => (
-              <option key={m} value={m}>
-                {m}
-              </option>
-            ))}
-          </select>
-        </label>
+            <label>
+              חודש
+              <select value={month} onChange={(e) => setMonth(e.target.value)}>
+                <option value="">בחר חודש</option>
+                {MONTH_OPTIONS.map((m) => (
+                  <option key={m} value={m}>
+                    {m}
+                  </option>
+                ))}
+              </select>
+            </label>
 
-        <label>
-          שעות רגילות
-          <input
-            type="number"
-            value={reg}
-            onChange={(e) => setReg(+e.target.value)}
-          />
-        </label>
+            <label>
+              שעות רגילות
+              <input
+                type="number"
+                value={reg}
+                onChange={(e) => setReg(+e.target.value)}
+              />
+            </label>
 
-        <label>
-          שעות 125%
-          <input
-            type="number"
-            value={h125}
-            onChange={(e) => setH125(+e.target.value)}
-          />
-        </label>
+            <label>
+              שעות 125%
+              <input
+                type="number"
+                value={h125}
+                onChange={(e) => setH125(+e.target.value)}
+              />
+            </label>
 
-        <label>
-          שעות 150%
-          <input
-            type="number"
-            value={h150}
-            onChange={(e) => setH150(+e.target.value)}
-          />
-        </label>
+            <label>
+              שעות 150%
+              <input
+                type="number"
+                value={h150}
+                onChange={(e) => setH150(+e.target.value)}
+              />
+            </label>
 
-        <label>
-          שכר ברוטו (₪)
-          <input
-            type="number"
-            value={gross}
-            onChange={(e) => setGross(+e.target.value)}
-          />
-        </label>
+            <label>
+              שכר ברוטו (₪)
+              <input
+                type="number"
+                value={gross}
+                onChange={(e) => setGross(+e.target.value)}
+              />
+            </label>
 
-        <label>
-          ניכויים סה״כ (₪)
-          <input
-            type="number"
-            value={ded}
-            onChange={(e) => setDed(+e.target.value)}
-          />
-        </label>
+            <label>
+              ניכויים סה״כ (₪)
+              <input
+                type="number"
+                value={ded}
+                onChange={(e) => setDed(+e.target.value)}
+              />
+            </label>
 
-        <button onClick={addMonth}>➕ הוסף חודש</button>
+            <button onClick={addMonth}>➕ הוסף חודש</button>
+          </>
+        )}
       </div>
+
 
       {/* טבלה */}
       {history.length > 0 && (
