@@ -76,6 +76,37 @@ function App() {
       ? Math.round(lastMonth.hours - targetHours)
       : null;
 
+
+// ⭐ NEW: טעינת נתוני דוגמה
+function loadExampleData() {
+  const example: MonthRecord[] = [
+    { month: "אוג-24", hours: 150, net: 12200, K: 81, status: "neutral" },
+    { month: "ספט-24", hours: 168, net: 13800, K: 82, S: 90, status: "positive" },
+    { month: "אוק-24", hours: 160, net: 13000, K: 81, S: 72, status: "neutral" },
+    { month: "נוב-24", hours: 185, net: 15000, K: 81, S: 88, status: "positive" },
+    { month: "דצמ-24", hours: 220, net: 17000, K: 77, S: 60, status: "negative" },
+
+    { month: "ינו-25", hours: 150, net: 12500, K: 83, S: 140, status: "positive" },
+    { month: "פבר-25", hours: 165, net: 13500, K: 82, S: 67, status: "neutral" },
+    { month: "מרץ-25", hours: 200, net: 15500, K: 78, S: 45, status: "negative" },
+    { month: "אפר-25", hours: 155, net: 12800, K: 83, S: 120, status: "positive" },
+
+    { month: "מאי-25", hours: 180, net: 14500, K: 81, S: 60, status: "neutral" },
+    { month: "יונ-25", hours: 160, net: 13200, K: 82, S: 87, status: "positive" },
+    { month: "יול-25", hours: 170, net: 13600, K: 80, S: 40, status: "negative" },
+    { month: "אוג-25", hours: 145, net: 12000, K: 83, S: 160, status: "positive" },
+
+    { month: "ספט-25", hours: 190, net: 15000, K: 79, S: 50, status: "negative" },
+    { month: "אוק-25", hours: 160, net: 13200, K: 83, S: 140, status: "positive" },
+    { month: "נוב-25", hours: 175, net: 14200, K: 81, S: 67, status: "neutral" },
+    { month: "דצמ-25", hours: 210, net: 16500, K: 79, S: 45, status: "negative" },
+
+    { month: "ינו-26", hours: 165, net: 13800, K: 84, S: 200, status: "positive" },
+  ];
+
+  setHistory(example);
+  setIsTargetManual(false);
+}
   // =====================
   // טעינת קובץ אקסל
   // =====================
@@ -267,6 +298,12 @@ function App() {
             onChange={handleFile}
           />
         </h3>
+          <button
+            style={{ marginTop: 10 }}
+            onClick={loadExampleData}
+          >
+            ▶️ לחץ כאן לטעינת נתונים לדוגמה - ללא העלאת קובץ
+        </button>
       </div>
 
       {/* ⭐ NEW: יעד חודשי */}
