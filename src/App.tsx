@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react"; // ⭐ NEW: useEffect
 import * as XLSX from "xlsx";
 import "./App.css";
 
@@ -28,6 +28,19 @@ const MONTH_OPTIONS = [
   "דצמ-26",
 ];
 
+// ⭐ NEW: חישוב יעד ברירת מחדל חכם
+function calcSmartTargetHours(history: MonthRecord[]) {
+  const healthy = history.filter(
+    (m) => m.status !== "negative" && m.hours > 0
+  );
+  if (healthy.length === 0) return 0;
+
+  const avg =
+    healthy.reduce((sum, m) => sum + m.hours, 0) / healthy.length;
+
+  return Math.round(avg * 0.9);
+}
+
 function App() {
   const [month, setMonth] = useState("");
   const [reg, setReg] = useState(0);
@@ -38,9 +51,21 @@ function App() {
 
   const [history, setHistory] = useState<MonthRecord[]>([]);
 
+  // ⭐ NEW: יעד חודשי + דגל שינוי ידני
+  const [targetHours, setTargetHours] = useState(0);
+  const [isTargetManual, setIsTargetManual] = useState(false);
+
   const weightedHours = reg + h125 * 1.25 + h150 * 1.5;
   const net = gross - ded;
   const K = weightedHours > 0 ? net / weightedHours : 0;
+
+  // ⭐ NEW: עדכון אוטומטי של היעד אחרי טעינת אקסל / הוספת חודש
+  useEffect(() => {
+    if (isTargetManual) return;
+
+    const smart = calcSmartTargetHours(history);
+    if (smart > 0) setTargetHours(smart);
+  }, [history, isTargetManual]);
 
   // =====================
   // טעינת קובץ אקסל
@@ -61,12 +86,10 @@ function App() {
 
       const rows: any[][] = XLSX.utils.sheet_to_json(sheet, {
         header: 1,
-        raw: false, // חשוב!
+        raw: false,
       });
 
-
-      const dataRows = rows.slice(1); // דילוג על כותרות
-
+      const dataRows = rows.slice(1);
       const imported: MonthRecord[] = [];
 
       dataRows.forEach((row) => {
@@ -131,7 +154,6 @@ function App() {
 
     setHistory([...history, record]);
 
-    // איפוס שדות
     setMonth("");
     setReg(0);
     setH125(0);
@@ -146,7 +168,6 @@ function App() {
   return (
     <div className="container">
       <h1>💰 מחשבון לניתוח אפקטיביות ומיסוי שעות עבודה</h1>
-
     <p className="intro">
       הכלי הזה עוזר להבין האם משתלם לך לעבוד יותר שעות,
       או שדווקא השעות הנוספות כבר לא משתלמות בגלל מיסוי וניכויים.
@@ -225,7 +246,6 @@ function App() {
           אין צורך בעמודות נוספות. נתונים שאינם בעמודות A–F לא משפיעים על החישוב.
         </p>
       </div>
-
       {/* טעינת אקסל */}
       <div className="card">
         <label>
@@ -236,6 +256,33 @@ function App() {
             onChange={handleFile}
           />
         </label>
+      </div>
+
+      {/* ⭐ NEW: יעד חודשי */}
+      <div className="card">
+        <h3>🎯 יעד שעות חודשי</h3>
+
+        <label>
+          יעד (שעות)
+          <input
+            type="number"
+            value={targetHours}
+            onChange={(e) => {
+              setTargetHours(+e.target.value);
+              setIsTargetManual(true);
+            }}
+          />
+        </label>
+
+        <button
+          onClick={() => {
+            setTargetHours(calcSmartTargetHours(history));
+            setIsTargetManual(false);
+          }}
+          disabled={history.length === 0}
+        >
+          ♻️ חזור ליעד חכם
+        </button>
       </div>
 
       {/* הזנה ידנית */}
@@ -251,7 +298,6 @@ function App() {
             ))}
           </select>
         </label>
-
 
         <label>
           שעות רגילות
@@ -332,7 +378,7 @@ function App() {
           </tbody>
         </table>
       )}
-    <div className="explanation">
+          <div className="explanation">
       <h3>איך מחושבת ההמלצה?</h3>
 
       <p>

@@ -138,6 +138,12 @@ tr.negative {
   border: 1px solid #e5e7eb;
 }
 
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f1f5f9;
+}
+
 .legend h3 {
   margin-top: 0;
 }
