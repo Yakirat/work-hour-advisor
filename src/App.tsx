@@ -7,6 +7,7 @@ type Status = "positive" | "neutral" | "negative";
 type MonthRecord = {
   month: string;
   hours: number;
+  gross: number;
   net: number;
   K: number;
   S?: number;
@@ -79,26 +80,27 @@ function App() {
 
 // ⭐ NEW: טעינת נתוני דוגמה
 function loadExampleData() {
-  const example: MonthRecord[] = [
-    { month: "אוג-24", hours: 160.0, net: 13000.0, K: 81.25, status: "neutral" },
-    { month: "ספט-24", hours: 170.0, net: 15000.0, K: 88.24, S: 200.0, status: "positive" },
-    { month: "אוק-24", hours: 190.0, net: 15800.0, K: 83.16, S: 40.0, status: "negative" },
-    { month: "נוב-24", hours: 195.0, net: 17000.0, K: 87.18, S: 240.0, status: "positive" },
-    { month: "דצמ-24", hours: 215.0, net: 17500.0, K: 81.40, S: 25.0, status: "negative" },
-    { month: "ינו-25", hours: 218.0, net: 18200.0, K: 83.49, S: 233.33, status: "positive" },
-    { month: "פבר-25", hours: 228.0, net: 19000.0, K: 83.33, S: 80.0, status: "neutral" },
-    { month: "מרץ-25", hours: 248.0, net: 19800.0, K: 79.84, S: 40.0, status: "negative" },
-    { month: "אפר-25", hours: 255.0, net: 21500.0, K: 84.31, S: 242.86, status: "positive" },
-    { month: "מאי-25", hours: 270.0, net: 22000.0, K: 81.48, S: 33.33, status: "negative" },
-    { month: "יונ-25", hours: 275.0, net: 23000.0, K: 83.64, S: 200.0, status: "positive" },
-    { month: "יול-25", hours: 285.0, net: 23200.0, K: 81.40, S: 20.0, status: "negative" },
-    { month: "אוג-25", hours: 295.0, net: 24500.0, K: 83.05, S: 130.0, status: "positive" },
-    { month: "ספט-25", hours: 305.0, net: 25000.0, K: 81.97, S: 50.0, status: "negative" },
-    { month: "אוק-25", hours: 315.0, net: 26000.0, K: 82.54, S: 100.0, status: "positive" },
-    { month: "נוב-25", hours: 325.0, net: 26500.0, K: 81.54, S: 50.0, status: "negative" },
-    { month: "דצמ-25", hours: 340.0, net: 27000.0, K: 79.41, S: 33.33, status: "negative" },
-    { month: "ינו-26", hours: 350.0, net: 27800.0, K: 79.43, S: 80.0, status: "neutral" },
-  ];
+const example: MonthRecord[] = [
+  { month: "אוג-24", hours: 160.0, gross: 15500, net: 13000.0, K: 81.25, status: "neutral" },
+  { month: "ספט-24", hours: 170.0, gross: 18000, net: 15000.0, K: 88.24, S: 200.0, status: "positive" },
+  { month: "אוק-24", hours: 190.0, gross: 19500, net: 15800.0, K: 83.16, S: 40.0, status: "negative" },
+  { month: "נוב-24", hours: 195.0, gross: 21500, net: 17000.0, K: 87.18, S: 240.0, status: "positive" },
+  { month: "דצמ-24", hours: 215.0, gross: 24000, net: 17500.0, K: 81.40, S: 25.0, status: "negative" },
+  { month: "ינו-25", hours: 218.0, gross: 22500, net: 18200.0, K: 83.49, S: 233.33, status: "positive" },
+  { month: "פבר-25", hours: 228.0, gross: 23500, net: 19000.0, K: 83.33, S: 80.0, status: "neutral" },
+  { month: "מרץ-25", hours: 248.0, gross: 25500, net: 19800.0, K: 79.84, S: 40.0, status: "negative" },
+  { month: "אפר-25", hours: 255.0, gross: 27500, net: 21500.0, K: 84.31, S: 242.86, status: "positive" },
+  { month: "מאי-25", hours: 270.0, gross: 28500, net: 22000.0, K: 81.48, S: 33.33, status: "negative" },
+  { month: "יונ-25", hours: 275.0, gross: 30000, net: 23000.0, K: 83.64, S: 200.0, status: "positive" },
+  { month: "יול-25", hours: 285.0, gross: 30500, net: 23200.0, K: 81.40, S: 20.0, status: "negative" },
+  { month: "אוג-25", hours: 295.0, gross: 32500, net: 24500.0, K: 83.05, S: 130.0, status: "positive" },
+  { month: "ספט-25", hours: 305.0, gross: 33500, net: 25000.0, K: 81.97, S: 50.0, status: "negative" },
+  { month: "אוק-25", hours: 315.0, gross: 35000, net: 26000.0, K: 82.54, S: 100.0, status: "positive" },
+  { month: "נוב-25", hours: 325.0, gross: 36000, net: 26500.0, K: 81.54, S: 50.0, status: "negative" },
+  { month: "דצמ-25", hours: 340.0, gross: 38000, net: 27000.0, K: 79.41, S: 33.33, status: "negative" },
+  { month: "ינו-26", hours: 350.0, gross: 39500, net: 27800.0, K: 79.43, S: 80.0, status: "neutral" },
+];
+
 
   setHistory(example);
   setIsTargetManual(false);
@@ -153,7 +155,7 @@ function loadExampleData() {
           else if (S > prev.K + 5) status = "positive";
         }
 
-        imported.push({ month, hours, net, K, S, status });
+        imported.push({ month, hours, gross, net, K, S, status });
       });
 
       setHistory(imported);
@@ -182,6 +184,7 @@ function loadExampleData() {
     const record: MonthRecord = {
       month,
       hours: weightedHours,
+      gross,           // ⭐ NEW
       net,
       K,
       S,
@@ -451,6 +454,7 @@ function loadExampleData() {
             <tr>
               <th>חודש</th>
               <th>שעות</th>
+              <th>ברוטו (₪)</th>
               <th>נטו/שעה</th>
               <th>נטו שולי</th>
               <th>מצב</th>
@@ -462,6 +466,7 @@ function loadExampleData() {
               <tr key={i} className={m.status}>
                 <td>{m.month}</td>
                 <td>{m.hours.toFixed(1)}</td>
+                <td>{m.gross.toLocaleString()}</td>
                 <td>{m.K.toFixed(2)}</td>
                 <td>{m.S !== undefined ? m.S.toFixed(2) : "-"}</td>
                 <td>{m.status}</td>
