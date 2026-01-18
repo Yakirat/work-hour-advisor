@@ -386,6 +386,22 @@ const example: MonthRecord[] = [
 
       {/* הזנה ידנית */}
       <div className="card">
+        <h3 style={{ marginBottom: 8 }}>
+          ✍️ הוספת חודש ידנית
+          <span className="tooltip" style={{ marginRight: 6 }}>
+            ℹ️
+            <span className="tooltip-text">
+              כאן ניתן להזין חודש באופן ידני, למשל אם אין לך קובץ אקסל או אם
+              ברצונך לבדוק תרחיש עתידי. הנתונים שתזין ישפיעו על החישובים,
+              ההמלצות והיעד החודשי.
+            </span>
+          </span>
+        </h3>
+
+        <p className="note" style={{ marginTop: 0 }}>
+          מתאים גם להזנת חודשים עתידיים לצורך בדיקת “מה יקרה אם”.
+        </p>
+
         <label>
           חודש
           <select value={month} onChange={(e) => setMonth(e.target.value)}>
