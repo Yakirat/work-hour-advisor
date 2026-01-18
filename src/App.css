@@ -162,3 +162,33 @@ button:disabled {
 .note {
   margin-top: 10px;
   font-size: 13px;
+}
+
+/* ===== Tooltip ===== */
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  margin-right: 6px;
+  cursor: help;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: 260px;
+  background-color: #111827;
+  color: #ffffff;
+  text-align: right;
+  padding: 8px 10px;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 10;
+  top: 120%;
+  right: 0;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+}
