@@ -550,7 +550,6 @@ const example: MonthRecord[] = [
                 <td>{m.gross.toLocaleString()}</td>
                 <td>{m.K.toFixed(2)}</td>
                 <td>{m.S !== undefined ? m.S.toFixed(2) : "-"}</td>
-                <td>{m.status}</td>
                 <td>
                   {m.status === "positive" && "➕ להוסיף"}
                   {m.status === "neutral" && "➗ להשאיר"}
