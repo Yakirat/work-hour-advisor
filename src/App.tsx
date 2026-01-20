@@ -496,69 +496,71 @@ const example: MonthRecord[] = [
 
       {/* טבלה */}
       {history.length > 0 && (
-        <table>
-          <thead>
-            <tr>
-              <th>חודש</th>
-              <th>
-                שעות (סה״כ)
-                <span className="tooltip">
-                  ℹ️
-                  <span className="tooltip-text">
-                    סך כל שעות העבודה בחודש, כולל שעות רגילות ושעות נוספות (125% ו-150%).
+        <div className="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>חודש</th>
+                <th>
+                  שעות (סה״כ)
+                  <span className="tooltip">
+                    ℹ️
+                    <span className="tooltip-text">
+                      סך כל שעות העבודה בחודש, כולל שעות רגילות ושעות נוספות (125% ו-150%).
+                    </span>
                   </span>
-                </span>
-              </th>
+                </th>
 
-              <th>ברוטו (₪)</th>
-              <th>
-                נטו/שעה
-                <span className="tooltip">
-                  ℹ️
-                  <span className="tooltip-text">
-                    כמה כסף נטו הרווחת בממוצע על כל שעת עבודה בחודש.
+                <th>ברוטו (₪)</th>
+                <th>
+                  נטו/שעה
+                  <span className="tooltip">
+                    ℹ️
+                    <span className="tooltip-text">
+                      כמה כסף נטו הרווחת בממוצע על כל שעת עבודה בחודש.
+                    </span>
                   </span>
-                </span>
-              </th>
-              <th>
-                נטו שולי
-                <span className="tooltip">
-                  ℹ️
-                  <span className="tooltip-text">
-                    כמה כסף נטו הרווחת על כל שעה נוספת ביחס לחודש הקודם.
+                </th>
+                <th>
+                  נטו שולי
+                  <span className="tooltip">
+                    ℹ️
+                    <span className="tooltip-text">
+                      כמה כסף נטו הרווחת על כל שעה נוספת ביחס לחודש הקודם.
+                    </span>
                   </span>
-                </span>
-              </th>
+                </th>
 
-              <th>
-                המלצה לשעות נוספות
-                <span className="tooltip">
-                  ℹ️
-                  <span className="tooltip-text">
-                    המלצה לחודש הבא: האם כדאי להוסיף, להשאיר או להוריד שעות נוספות.
+                <th>
+                  המלצה לשעות נוספות
+                  <span className="tooltip">
+                    ℹ️
+                    <span className="tooltip-text">
+                      המלצה לחודש הבא: האם כדאי להוסיף, להשאיר או להוריד שעות נוספות.
+                    </span>
                   </span>
-                </span>
-              </th>
+                </th>
 
-            </tr>
-          </thead>
-          <tbody>
-            {history.map((m, i) => (
-              <tr key={i} className={m.status}>
-                <td>{m.month}</td>
-                <td>{m.hours.toFixed(1)}</td>
-                <td>{m.gross.toLocaleString()}</td>
-                <td>{m.K.toFixed(2)}</td>
-                <td>{m.S !== undefined ? m.S.toFixed(2) : "-"}</td>
-                <td>
-                  {m.status === "positive" && "➕ להוסיף"}
-                  {m.status === "neutral" && "➗ להשאיר"}
-                  {m.status === "negative" && "➖ להוריד"}
-                </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {history.map((m, i) => (
+                <tr key={i} className={m.status}>
+                  <td>{m.month}</td>
+                  <td>{m.hours.toFixed(1)}</td>
+                  <td>{m.gross.toLocaleString()}</td>
+                  <td>{m.K.toFixed(2)}</td>
+                  <td>{m.S !== undefined ? m.S.toFixed(2) : "-"}</td>
+                  <td>
+                    {m.status === "positive" && "➕ להוסיף"}
+                    {m.status === "neutral" && "➗ להשאיר"}
+                    {m.status === "negative" && "➖ להוריד"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
           <div className="explanation">
       <h3>איך מחושבת ההמלצה?</h3>
