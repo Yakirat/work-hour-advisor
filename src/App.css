@@ -176,6 +176,7 @@ button:disabled {
 .tooltip-text {
   visibility: hidden;
   width: 260px;
+  max-width: 90vw;
   background-color: #111827;
   color: #ffffff;
   text-align: right;
@@ -187,8 +188,17 @@ button:disabled {
   right: 0;
   font-size: 13px;
   line-height: 1.4;
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 .tooltip:hover .tooltip-text {
   visibility: visible;
+}
+
+@media (max-width: 600px) {
+  .tooltip-text {
+    right: auto;
+    left: 0;
+  }
 }
