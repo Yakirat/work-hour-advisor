@@ -531,16 +531,6 @@ const example: MonthRecord[] = [
               </th>
 
               <th>
-                מצב
-                <span className="tooltip">
-                  ℹ️
-                  <span className="tooltip-text">
-                    השוואה בין הרווח מהשעות הנוספות לבין השכר הממוצע לשעה.
-                  </span>
-                </span>
-              </th>
-
-              <th>
                 המלצה לשעות נוספות
                 <span className="tooltip">
                   ℹ️
