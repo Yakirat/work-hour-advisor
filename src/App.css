@@ -9,8 +9,9 @@ body {
 }
 
 .container {
-  max-width: 1000px;
+  max-width: 100%;
   width: 100%;
+  overflow-x: hidden;
   margin-inline: auto;
   padding: 24px;
   direction: rtl;
@@ -211,4 +212,13 @@ button:disabled {
 
 .table-wrapper table {
   min-width: 700px;
+}
+
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+* {
+  outline: 1px solid red;
 }
